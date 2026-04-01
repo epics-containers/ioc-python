@@ -15,4 +15,4 @@ if [[ -f ${override} && ${override} != ${THIS_SCRIPT} ]]; then
 fi
 
 # probes for simple python IOCs needs review
-return 0
+exit 0
