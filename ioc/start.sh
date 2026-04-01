@@ -38,7 +38,7 @@ fi
 # MAIN_PYTHON environment variable
 MAIN_PYTHON=${MAIN_PYTHON:-main.py}
 STARTUP_PYTHON=${CONFIG_DIR}/${MAIN_PYTHON}
-export $PYTHONPATH=${CONFIG_DIR}
+export PYTHONPATH=${CONFIG_DIR}
 
 # execute the first python file in *.py from the config directory, if it exists
 if [ -f ${STARTUP_PYTHON} ]; then
