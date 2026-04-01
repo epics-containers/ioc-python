@@ -3,7 +3,7 @@
 # wrap the console *************************************************************
 
 if [[ -n ${KUBERNETES_PORT} && -z ${STDIO_EXPOSED} ]]; then
-    STDIO_EXPOSED=YES exec stdio-socket ${IOC}/start.sh
+    STDIO_EXPOSED=YES exec stdio-socket --ptty ${IOC}/start.sh
     exit 0
 fi
 
