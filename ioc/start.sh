@@ -26,6 +26,8 @@ set -xe
 
 cd ${IOC}
 
+CONFIG_DIR=${IOC}/config
+
 # check for an override start.sh script ****************************************
 
 if [ -f ${CONFIG_DIR}/start.sh ]; then
@@ -35,7 +37,7 @@ fi
 # execute the first python file in *.py from the config directory, if it exists
 if [ -f ${CONFIG_DIR}/*.py ]; then
     exec python ${CONFIG_DIR}/*.py
-else:
+else
     echo "No startup script found in ${CONFIG_DIR}"
     echo "Restarting in 20 seconds..."
     sleep 20

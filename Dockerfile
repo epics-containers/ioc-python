@@ -11,22 +11,19 @@ FROM  ${DEVELOPER} AS developer
 COPY pyproject.toml pyproject.toml
 RUN uv sync --python=3.13
 
-ENV PATH=/.venv/bin:$PATH
+COPY /ioc /epics/ioc
 
-##### runtime preparation stage ################################################
-FROM developer AS runtime_prep
-
-# get the products from the build stage and reduce to runtime assets only
-# /python is created by uv and is needed in the runtime target
-RUN ibek ioc extract-runtime-assets /assets /python
+env PATH=/.venv/bin:$PATH
 
 ##### runtime stage ############################################################
 FROM ${RUNTIME} AS runtime
 
 # get runtime assets from the preparation stage
-COPY --from=runtime_prep /assets /
+COPY --from=developer /.venv /.venv
+COPY --from=developer /epics/ioc /epics/ioc
+COPY --from=developer /python /python
 
-ENV PATH=/.venv/bin:$PATH
+env PATH=/.venv/bin:$PATH
 
 # launch the startup script with stdio-expose to allow console connections
 CMD ["bash", "-c", "${IOC}/start.sh"]
