@@ -3,18 +3,19 @@
 # wrap the console *************************************************************
 
 # stdio-socket takes a single command string, so carry any command line
-# arguments across the wrap in IOC_ARGS (shell quoted) and restore them after
+# arguments across the wrap in _STDIO_IOC_ARGS (shell quoted, internal only)
+# and restore them after
 if [[ -n ${KUBERNETES_PORT} && -z ${STDIO_EXPOSED} ]]; then
     if [[ $# -gt 0 ]]; then
-        export IOC_ARGS="$(printf '%q ' "$@")"
+        export _STDIO_IOC_ARGS="$(printf '%q ' "$@")"
     fi
     STDIO_EXPOSED=YES exec stdio-socket --ptty ${IOC}/start.sh
     exit 0
 fi
 
-if [[ -n ${IOC_ARGS} ]]; then
-    eval set -- "${IOC_ARGS}"
-    unset IOC_ARGS
+if [[ -n ${_STDIO_IOC_ARGS} ]]; then
+    eval set -- "${_STDIO_IOC_ARGS}"
+    unset _STDIO_IOC_ARGS
 fi
 
 # error reporting **************************************************************

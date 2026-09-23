@@ -34,9 +34,18 @@ caget IOCNAME:PVNAME
 
 Any arguments given to `ioc/start.sh` are passed on to the startup python
 script (`config/main.py`, or `$MAIN_PYTHON`) and to an override
-`config/start.sh`. The ioc-instance helm chart runs the container with
-`command: [bash, -c]`, so to add arguments in a service's `values.yaml`,
-forward them from the `bash -c` script like this (the second entry fills `$0`):
+`config/start.sh`. The simplest way to add arguments in a service's
+`values.yaml` is to override the ioc-instance helm chart's `command` so that
+`start.sh` is run directly, and put the arguments in `args`:
+
+```yaml
+ioc-instance:
+  command: [/epics/ioc/start.sh]
+  args: [--my-option, value]
+```
+
+Alternatively, keep the chart's default `command: [bash, -c]` and forward the
+arguments from the `bash -c` script (the second entry fills `$0`):
 
 ```yaml
 ioc-instance:
