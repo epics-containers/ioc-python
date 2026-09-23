@@ -29,3 +29,20 @@ The vscode developer container auto forwards the channel access ports on the loo
 export EPICS_CA_NAME_SERVERS=127.0.0.1:5064
 caget IOCNAME:PVNAME
 ```
+
+## Passing arguments to the python script
+
+Any arguments given to `ioc/start.sh` are passed on to the startup python
+script (`config/main.py`, or `$MAIN_PYTHON`) and to an override
+`config/start.sh`. The ioc-instance helm chart runs the container with
+`command: [bash, -c]`, so to add arguments in a service's `values.yaml`,
+forward them from the `bash -c` script like this (the second entry fills `$0`):
+
+```yaml
+ioc-instance:
+  args:
+    - /epics/ioc/start.sh "$@"
+    - start.sh
+    - --my-option
+    - value
+```
