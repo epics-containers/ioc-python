@@ -9,4 +9,6 @@ dependencies = [
     "scipy",
     "softioc",
     "cothread",
+    "PyQt5",
+    "matplotlib",
 ]
