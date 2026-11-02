@@ -1,11 +1,22 @@
 #!/bin/bash
 
+# parse arguments *************************************************************
+
+# --test: check the startup python script compiles, but do not launch it. Used
+# by CI to validate configs. All arguments, including --test, are also forwarded
+# unchanged to a config override start.sh (see below) if one exists, for it to
+# interpret itself.
+TEST_MODE=false
+[[ "$1" == "--test" ]] && TEST_MODE=true
+
 # wrap the console *************************************************************
+# test mode is not wrapped: stdio-socket always exits 0, so a wrapped --test
+# could never fail.
 
 # stdio-socket takes a single command string, so carry any command line
 # arguments across the wrap in _STDIO_IOC_ARGS (shell quoted, internal only)
 # and restore them after
-if [[ -n ${KUBERNETES_PORT} && -z ${STDIO_EXPOSED} ]]; then
+if [[ -n ${KUBERNETES_PORT} && -z ${STDIO_EXPOSED} && "${TEST_MODE}" != "true" ]]; then
     if [[ $# -gt 0 ]]; then
         export _STDIO_IOC_ARGS="$(printf '%q ' "$@")"
     fi
@@ -39,6 +50,11 @@ cd ${IOC}
 
 CONFIG_DIR=${IOC}/config
 
+# report what this image was built from (python versions)
+if [[ -f /epics/versions.json ]]; then
+    cat /epics/versions.json
+fi
+
 # check for an override start.sh script ****************************************
 
 if [ -f ${CONFIG_DIR}/start.sh ]; then
@@ -53,6 +69,11 @@ export PYTHONPATH=${CONFIG_DIR}
 
 # execute the first python file in *.py from the config directory, if it exists
 if [ -f ${STARTUP_PYTHON} ]; then
+    if [[ "${TEST_MODE}" == "true" ]]; then
+        python -c 'import sys; compile(open(sys.argv[1]).read(), sys.argv[1], "exec")' ${STARTUP_PYTHON}
+        echo "Test mode: ${STARTUP_PYTHON} compiles, skipping launch"
+        exit 0
+    fi
     exec python ${STARTUP_PYTHON} "$@"
 else
     echo "${STARTUP_PYTHON} not found"

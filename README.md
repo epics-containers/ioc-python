@@ -14,7 +14,7 @@ To update to the latest version of the template:
 
 pip install copier
 cd ioc-python
-copier update -a --trust .
+copier update --trust .
 ```
 
 ## Developer Container
@@ -55,3 +55,11 @@ ioc-instance:
     - --my-option
     - value
 ```
+
+A `--test` first argument makes `start.sh` check that the script compiles
+without launching it.
+
+## Architectures
+
+The image is published for amd64 and arm64. PyQt5 is amd64 only, as there are
+no linux aarch64 wheels for it.

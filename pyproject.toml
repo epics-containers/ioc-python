@@ -9,6 +9,7 @@ dependencies = [
     "scipy",
     "softioc",
     "cothread",
-    "PyQt5",
+    # PyQt5 and PyQt5-Qt5 publish no linux aarch64 wheels
+    "PyQt5; platform_machine == 'x86_64'",
     "matplotlib",
 ]
