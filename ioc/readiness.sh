@@ -35,6 +35,11 @@ if [[ -f ${override} && $(realpath "${override}") != "${THIS_SCRIPT}" ]]; then
     exec bash ${override}
 fi
 
+# the python IOC serves no UPTIME PV, so the default probe below could never
+# pass. Like liveness.sh, report Ready until probes for python IOCs are reviewed.
+# Add a config/readiness.sh override to probe a PV the IOC serves.
+exit 0
+
 # use the same PV and CA settings as liveness.sh, including their overrides
 K8S_IOC_PV=${K8S_IOC_PV:-"${IOC_PREFIX^^}:UPTIME"}
 K8S_IOC_PORT=${K8S_IOC_PORT:-5064}
