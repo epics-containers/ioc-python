@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: 5.0.0
+_commit: 5.0.1
 _src_path: https://github.com/epics-containers/ioc-template
 arm64: true
 description: Generic python IOC for simply python script based IOCs
