@@ -3,7 +3,7 @@ name = "ioc-python"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
-    "ibek>=3.3.4",
+    "ibek>=4.12.1",
     "stdio-socket>=1.4.0",
     "numpy",
     "scipy",
